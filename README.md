@@ -1,7 +1,11 @@
-Start:
-    * npm install
-    * change config/db.js file to fit your db credentials
-    * npm start
+# Start:
+    Change config/db.js file to fit your db credentials (in this project mongodb was used)
+    ```bash
+    npm install
+    npm start
+    ```
 
-Testing:
-    * npm test
+# Testing:
+    ```bash
+    npm test
+    ```
