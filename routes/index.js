@@ -1,4 +1,3 @@
 module.exports = {
-  pageViews: require('./pageViews'),
-  stats: require('./stats')
+  pageViews: require('./pageViews')
 };
