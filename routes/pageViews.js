@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const useragent = require('express-useragent');
 const geoip = require('geoip-lite');
+const { path } = require('ramda');
 const { PageView } = require('../models');
 const logger = require('../services/logger');
 const { getEndpointsMiddleware } = require('../middleware');
@@ -96,16 +97,18 @@ router.get('/by-browser/:browser', async (req, res) => {
 
 router.get('/returning-users-rate', async (req, res) => {
   try {
-    const uniqueCount = (await PageView.aggregate([
+    const uniqueData = (await PageView.aggregate([
       { $group: { _id: '$user-id' } },
       { $group: { _id: 1, count: { $sum: 1 } } }
-    ]))[0].count;
+    ]));
+    const uniqueCount = path([0, 'count'], uniqueData) || 0;
 
-    const visitedCount = (await PageView.aggregate([
+    const visitedData = (await PageView.aggregate([
       { $group: { "_id": "$user-id", "count": { $sum: 1 } } },
       { $match: { "count": { $gt: 1 } } },
       { $count: 'count' }
-    ]))[0].count;
+    ]));
+    const visitedCount = path([0, 'count'], visitedData) || 0;
 
     const rate = uniqueCount ? visitedCount / uniqueCount : 0;
 
